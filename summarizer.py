@@ -10,16 +10,11 @@ def load_model():
     model = PeftModel.from_pretrained(model, peft_model_id)
     return model , tokenizer
 
-model , tokenizer = load_model()
-
-def preprocess_text(text):
-    model_input = tokenizer(text , truncation = True, return_tensors="pt")
-    return model_input
-
 app = Flask(__name__)
 
 @app.route("/summarize", methods=["POST"])
 def summarize():
+  model , tokenizer = load_model()
   # Get the text from the request body
   data = request.get_json()
   text = data.get("text")
@@ -29,7 +24,7 @@ def summarize():
     return jsonify({"error": "Missing text in request body"}), 400
 
   # Preprocess the text
-  inputs = preprocess_text(text)
+  inputs = tokenizer(text , truncation = True, return_tensors="pt")
 
   # Generate summary using the model
   outputs = model.generate(**inputs, max_length=300, min_length=50 , do_sample = True , num_beams = 3 , no_repeat_ngram_size=2 , temperature=0.6 , length_penalty=1.0)
