@@ -12,7 +12,7 @@ def load_model():
     return model , tokenizer
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS for all origins (broad approach)
+CORS(app , origins=["http://127.0.0.1:5500"])  # Enable CORS for all origins (broad approach)
 
 @app.route("/summarize", methods=["POST"])
 def summarize():
