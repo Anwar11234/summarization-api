@@ -1,6 +1,7 @@
 from peft import PeftModel, PeftConfig
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 
 def load_model():
     peft_model_id = "ANWAR101/lora-bart-base-youtube-cnn"
@@ -11,6 +12,7 @@ def load_model():
     return model , tokenizer
 
 app = Flask(__name__)
+CORS(app)  # Enable CORS for all origins (broad approach)
 
 @app.route("/summarize", methods=["POST"])
 def summarize():
