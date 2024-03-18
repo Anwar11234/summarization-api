@@ -14,11 +14,11 @@ app = Flask(__name__)
 
 @app.before_request  # Use @app.before_request for middleware-like functionality
 def check_cors():
-    response = make_response(jsonify({'message': 'CORS is allowed for all origins'}))
+    response = make_response()
     response.headers.add('Access-Control-Allow-Origin', '*')  # Allow all origins
     response.headers.add('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization')
     response.headers.add('Access-Control-Allow-Credentials', 'true')
-    response.headers.add('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, UPDATE')
+    response.headers.add('Access-Control-Allow-Methods', 'POST')
     return response
 
 @app.route("/summarize", methods=["POST"])
