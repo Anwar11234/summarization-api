@@ -1,7 +1,6 @@
 from peft import PeftModel, PeftConfig
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
-from flask import Flask, request, jsonify
-from flask_cors import CORS
+from flask import Flask, request, jsonify , make_response
 
 def load_model():
     peft_model_id = "ANWAR101/lora-bart-base-youtube-cnn"
@@ -12,7 +11,15 @@ def load_model():
     return model , tokenizer
 
 app = Flask(__name__)
-CORS(app , origins=["http://127.0.0.1:5500"])  # Enable CORS for all origins (broad approach)
+
+@app.before_request  # Use @app.before_request for middleware-like functionality
+def check_cors():
+    response = make_response(jsonify({'message': 'CORS is allowed for all origins'}))
+    response.headers.add('Access-Control-Allow-Origin', '*')  # Allow all origins
+    response.headers.add('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization')
+    response.headers.add('Access-Control-Allow-Credentials', 'true')
+    response.headers.add('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, UPDATE')
+    return response
 
 @app.route("/summarize", methods=["POST"])
 def summarize():
