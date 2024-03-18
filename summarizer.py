@@ -12,7 +12,7 @@ def load_model():
     return model , tokenizer
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 @app.route("/summarize", methods=["POST"])
 def summarize():
